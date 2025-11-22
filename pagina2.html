@@ -1,206 +1,69 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Página 2 - Relacionar</title>
-
-    <style>
-        body { 
-            background: url("img/fondomario.png") center/cover fixed no-repeat; 
-            font-family: Arial; 
-            color: white; 
-            text-align: center; 
-        }
-
-        #contadorGlobal { 
-            background: yellow; 
-            color: black; 
-            width: 180px; 
-            padding:10px; 
-            font-weight:bold; 
-            text-align:center; 
-            margin:15px auto; 
-            border-radius:10px; 
-            border:3px solid black; 
-        }
-
-        .contenedor { 
-            padding:20px; 
-            background: rgba(0,0,0,0.45); 
-            border-radius:20px; 
-            width:85%; 
-            margin:auto; 
-        }
-
-        .fila {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            flex-wrap: nowrap;
-            margin-top: 20px;
-        }
-
-        .item { 
-            padding:10px; 
-            background:white; 
-            color:black; 
-            cursor:move; 
-            margin:10px; 
-            border-radius:10px; 
-            width:120px; 
-            display:inline-block; 
-        }
-
-        .item p { 
-            margin:5px 0 0; 
-            font-weight:bold; 
-        }
-
-        .caja { 
-            width:150px; 
-            height:170px; 
-            background:#fff; 
-            border:4px dashed yellow; 
-            display:flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            padding:10px; 
-            border-radius:10px; 
-        }
-
-        .caja img { 
-            width:90px; 
-            height:90px;
-            object-fit: contain;
-        }
-
-        .btn { 
-            background: yellow; 
-            color: black; 
-            padding:10px 20px; 
-            font-size:20px; 
-            border-radius:10px; 
-            border:3px solid black; 
-            text-decoration:none; 
-            margin:10px; 
-            display:inline-block; 
-        }
-    </style>
-
-    <script>
-    function initPuntos() {
-        if (!localStorage.getItem("puntosMario")) 
-            localStorage.setItem("puntosMario", "0");
+<meta charset="UTF-8">
+<title>Página 2 - Relacionar</title>
+<style>
+body{ background:url("img/fondomario.png") center/cover fixed no-repeat; font-family:Arial; color:white; text-align:center; }
+#contadorGlobal{ background:yellow;color:black;width:180px;padding:10px;font-weight:bold;text-align:center;margin:15px auto;border-radius:10px;border:3px solid black; }
+.contenedor{ padding:20px; background:rgba(0,0,0,0.45); border-radius:20px; width:85%; margin:auto; }
+.fila{ display:flex; justify-content:center; gap:25px; flex-wrap:nowrap; margin-top:20px; }
+.item{ padding:10px; background:white; color:black; cursor:move; margin:10px; border-radius:10px; width:120px; display:inline-block; }
+.item p{ margin:5px 0 0; font-weight:bold; }
+.caja{ width:150px; height:170px; background:#fff; border:4px dashed yellow; display:flex; flex-direction:column; justify-content:flex-start; align-items:center; padding:10px; border-radius:10px; }
+.caja img{ width:90px; height:90px; object-fit:contain; }
+.btn{ background:yellow; color:black; padding:10px 20px; font-size:20px; border-radius:10px; border:3px solid black; text-decoration:none; margin:10px; display:inline-block; }
+</style>
+<script>
+function initPuntos(){ if(!localStorage.getItem("puntosMario")) localStorage.setItem("puntosMario","0"); updateCounterDisplay(); }
+function addPointsIfNotScored(flag, pts){ if(!localStorage.getItem(flag)){ let actuales=parseInt(localStorage.getItem("puntosMario")||"0"); actuales+=pts; localStorage.setItem("puntosMario",actuales); localStorage.setItem(flag,"1"); return true;} return false; }
+function updateCounterDisplay(){ document.getElementById("contadorGlobal").innerText = "Puntos: "+ (localStorage.getItem("puntosMario")||0);}
+window.onload = initPuntos;
+function allowDrop(ev){ ev.preventDefault(); }
+function drag(ev){ ev.dataTransfer.setData("text",ev.target.id); }
+function drop(ev){
+    ev.preventDefault();
+    let data = ev.dataTransfer.getData("text");
+    let item = document.getElementById(data);
+    let destino = ev.target.closest(".caja"); if(!destino) return;
+    const correcto = destino.dataset.correcto;
+    if(correcto===data){
+        destino.appendChild(item);
+        const flag="p2_"+data;
+        const awarded=addPointsIfNotScored(flag,5);
+        if(awarded){ updateCounterDisplay(); destino.style.boxShadow="0 0 12px 4px rgba(255,215,0,0.8)"; setTimeout(()=>destino.style.boxShadow="",700);}
+        item.setAttribute("draggable","false"); item.style.cursor="default";
+    }else{
+        item.setAttribute("draggable","false"); item.style.opacity="0.5"; item.style.cursor="not-allowed";
+        alert("❌ Incorrecto, no podrás volver a colocarlo.");
     }
-
-    function addPointsIfNotScored(flag, pts) {
-        if (!localStorage.getItem(flag)) {
-            let actuales = parseInt(localStorage.getItem("puntosMario") || "0", 10);
-            actuales += pts;
-            localStorage.setItem("puntosMario", String(actuales));
-            localStorage.setItem(flag, "1");
-            return true;
-        }
-        return false;
-    }
-
-    function updateCounterDisplay() {
-        document.getElementById("contadorGlobal").innerText = 
-            "Puntos: " + (localStorage.getItem("puntosMario") || "0");
-    }
-
-    window.onload = function() {
-        initPuntos();
-        updateCounterDisplay();
-    };
-
-    function allowDrop(ev) { ev.preventDefault(); }
-
-    function drag(ev) { 
-        ev.dataTransfer.setData("text", ev.target.id); 
-    }
-
-    function drop(ev) {
-        ev.preventDefault();
-        let data = ev.dataTransfer.getData("text");
-        let item = document.getElementById(data);
-
-        let destino = ev.target.closest(".caja");
-        if (!destino) return;
-
-        const correcto = destino.dataset.correcto;
-
-        if (correcto === data) {
-            destino.appendChild(item);
-
-            const flag = "p2_" + data;
-            const awarded = addPointsIfNotScored(flag, 5);
-
-            if (awarded) {
-                updateCounterDisplay();
-                destino.style.boxShadow = "0 0 12px 4px rgba(255,215,0,0.8)";
-                setTimeout(()=> destino.style.boxShadow = "", 700);
-            } else {
-                alert("Ya obtuviste puntos por ese componente.");
-            }
-
-        } else {
-            alert("❌ Incorrecto, intenta de nuevo.");
-        }
-    }
-    </script>
+}
+</script>
 </head>
-
 <body>
 
 <div id="contadorGlobal">Puntos: 0</div>
 
 <div class="contenedor">
-    <h1>Relaciona cada componente con su imagen</h1>
+<h1>Relaciona cada componente con su imagen</h1>
 
-    <div>
-        <div id="cpu" class="item" draggable="true" ondragstart="drag(event)">
-            <p>CPU</p>
-        </div>
-
-        <div id="ram" class="item" draggable="true" ondragstart="drag(event)">
-            <p>RAM</p>
-        </div>
-
-        <div id="fuente" class="item" draggable="true" ondragstart="drag(event)">
-            <p>Fuente</p>
-        </div>
-
-        <div id="disco" class="item" draggable="true" ondragstart="drag(event)">
-            <p>Disco</p>
-        </div>
-    </div>
-
-    <div class="fila">
-        <div class="caja" data-correcto="fuente" ondrop="drop(event)" ondragover="allowDrop(event)">
-            <img src="img/fuente.jpg">
-        </div>
-
-        <div class="caja" data-correcto="disco" ondrop="drop(event)" ondragover="allowDrop(event)">
-            <img src="img/disco.jpg">
-        </div>
-
-        <div class="caja" data-correcto="ram" ondrop="drop(event)" ondragover="allowDrop(event)">
-            <img src="img/ram.jpg">
-        </div>
-
-        <div class="caja" data-correcto="cpu" ondrop="drop(event)" ondragover="allowDrop(event)">
-            <img src="img/cpu.jpg">
-        </div>
-    </div>
-
-    <br><br>
-
-    <a href="pagina1.html" class="btn">⬅ Volver</a>
-    <a href="pagina3.html" class="btn">➡ Página 3</a>
-
+<div>
+<div id="cpu" class="item" draggable="true" ondragstart="drag(event)"><p>CPU</p></div>
+<div id="ram" class="item" draggable="true" ondragstart="drag(event)"><p>RAM</p></div>
+<div id="fuente" class="item" draggable="true" ondragstart="drag(event)"><p>Fuente</p></div>
+<div id="disco" class="item" draggable="true" ondragstart="drag(event)"><p>Disco</p></div>
 </div>
 
+<div class="fila">
+<div class="caja" data-correcto="fuente" ondrop="drop(event)" ondragover="allowDrop(event)"><img src="img/fuente.jpg"></div>
+<div class="caja" data-correcto="disco" ondrop="drop(event)" ondragover="allowDrop(event)"><img src="img/disco.jpg"></div>
+<div class="caja" data-correcto="ram" ondrop="drop(event)" ondragover="allowDrop(event)"><img src="img/ram.jpg"></div>
+<div class="caja" data-correcto="cpu" ondrop="drop(event)" ondragover="allowDrop(event)"><img src="img/cpu.jpg"></div>
+</div>
+
+<a href="pagina1.html" class="btn">⬅ Volver</a>
+<a href="pagina3.html" class="btn">➡ Página 3</a>
+
+</div>
 </body>
 </html>
