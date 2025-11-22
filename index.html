@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Página 1 - Introducción</title>
+
+    <style>
+        /* ======= FONDO ROJO Y AZUL ESTILO MARIO ======= */
+        body {
+            font-family: "Press Start 2P", Arial, sans-serif;
+            background: linear-gradient(to bottom, #ff0000, #0033ff);
+            color: white;
+            text-align: center;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* ======= CONTENEDOR ======= */
+        .contenedor {
+            background: rgba(0,0,0,0.55);
+            padding: 25px;
+            width: 80%;
+            max-width: 900px;
+            margin: 30px auto;
+            border-radius: 20px;
+            border: 4px solid #ffd700;
+            box-shadow: 0 0 12px #ffd700;
+        }
+
+        h1 {
+            color: #ffd700;
+        }
+
+        /* ======= IMAGEN ======= */
+        .mario-img {
+            width: 300px;
+            filter: drop-shadow(0 0 10px #000);
+        }
+
+        /* ======= CONTENEDOR DE IMAGEN + BOTÓN ======= */
+        .imagen-con-boton {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* ======= BOTÓN SOBRE LA IMAGEN ======= */
+        .btn-sobre-imagen {
+            position: absolute;
+            top: 50%; 
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* ======= BOTONES ESTILO MARIO ======= */
+        .btn {
+            background: #ff0000;
+            border: 4px solid #ffe066;
+            padding: 14px 30px;
+            font-size: 14px;
+            color: white;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 8px;
+            transition: 0.2s;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: #ff3b3b;
+            transform: scale(1.1);
+        }
+
+        /* Texto descriptivo */
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 20px;
+        }
+    </style>
+
+    <script>
+        /* Inicializar puntos en caso de que se use en otras páginas */
+        function initPuntos() {
+            if (!localStorage.getItem("puntosMario"))
+                localStorage.setItem("puntosMario", "0");
+        }
+
+        window.onload = initPuntos;
+    </script>
+</head>
+
+<body>
+
+    <div class="contenedor">
+        <h1>Bienvenido al Mundo de Mario</h1>
+
+        <!-- Imagen con botón encima -->
+        <div class="imagen-con-boton">
+            <img src="img/mario.png" alt="Mario" class="mario-img">
+            <a href="pagina2.html" class="btn btn-sobre-imagen">➡ Continuar</a>
+        </div>
+
+        <p>
+            En esta aventura aprenderás sobre las partes del computador
+            mientras acompañas a Mario en una misión increíble.
+        </p>
+
+        <p>
+            ¡Prepárate para recorrer diferentes mundos, responder preguntas,
+            ganar puntos y avanzar hasta la meta final!
+        </p>
+    </div>
+
+</body>
+</html>

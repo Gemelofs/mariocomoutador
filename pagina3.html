@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Página 3 - Mini Juego</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            font-family: "Press Start 2P", Arial, sans-serif;
+            background: linear-gradient(to bottom, #ff0000, #0033ff);
+            color: white;
+            text-align: center;
+        }
+
+        #contadorGlobal {
+            background: yellow;
+            color: black;
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: 4px solid black;
+            font-size: 20px;
+            width: 220px;
+            margin: 20px auto;
+            font-weight: bold;
+            box-shadow: 0 0 10px #000;
+        }
+
+        .contenedor-juego {
+            background: rgba(0,0,0,0.55);
+            padding: 25px;
+            width: 80%;
+            max-width: 900px;
+            margin: 20px auto 40px;
+            border-radius: 20px;
+            border: 4px solid #ffd700;
+            box-shadow: 0 0 12px #ffd700;
+        }
+
+        .pregunta {
+            background: rgba(255,255,255,0.15);
+            padding: 15px;
+            border-radius: 12px;
+            border: 3px solid #ffd700;
+            margin: 20px 0;
+        }
+
+        .pregunta h3 {
+            color: #ffd700;
+        }
+
+        .mario-img {
+            width: 260px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 10px #000);
+        }
+
+        button, .btn {
+            background: #ff0000;
+            border: 4px solid #ffe066;
+            padding: 14px 30px;
+            font-size: 14px;
+            color: white;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 8px;
+            transition: 0.2s;
+        }
+
+        button:hover, .btn:hover {
+            background: #ff3b3b;
+            transform: scale(1.1);
+        }
+
+        #final {
+            display:none;
+            background: white;
+            color: black;
+            padding: 25px;
+            margin-top: 20px;
+            border-radius: 15px;
+            border: 4px solid #0033ff;
+        }
+    </style>
+
+    <script>
+        function initPuntos() {
+            if (!localStorage.getItem("puntosMario"))
+                localStorage.setItem("puntosMario", "0");
+        }
+
+        function addPointsIfNotScored(flag, pts) {
+            if (!localStorage.getItem(flag)) {
+                let actuales = parseInt(localStorage.getItem("puntosMario") || "0", 10);
+                actuales += pts;
+                localStorage.setItem("puntosMario", String(actuales));
+                localStorage.setItem(flag, "1");
+                return true;
+            }
+            return false;
+        }
+
+        function updateCounterDisplay() {
+            document.getElementById("contadorGlobal").innerText =
+                "Puntos: " + (localStorage.getItem("puntosMario") || "0");
+        }
+
+        let preguntasRespondidas = 0;
+        const totalPreguntas = 3;
+
+        window.onload = function() {
+            initPuntos();
+            updateCounterDisplay();
+        };
+
+        function correcto(btn, qId) {
+            const flag = "p3_" + qId;
+            addPointsIfNotScored(flag, 5);
+            preguntasRespondidas++;
+            desactivarGrupo(btn);
+            updateCounterDisplay();
+            verificarFin();
+        }
+
+        function incorrecto(btn) {
+            preguntasRespondidas++;
+            desactivarGrupo(btn);
+            verificarFin();
+        }
+
+        function desactivarGrupo(btn) {
+            let cont = btn.closest("div");
+            cont.querySelectorAll("button").forEach(b => b.disabled = true);
+        }
+
+        function verificarFin() {
+            if (preguntasRespondidas >= totalPreguntas) {
+                document.getElementById("juego").style.display = "none";
+                document.getElementById("final").style.display = "block";
+                document.getElementById("resultado-final").innerText =
+                    "Tu puntaje final es: " + (localStorage.getItem("puntosMario") || "0") + " puntos 🎉";
+            }
+        }
+    </script>
+</head>
+<body>
+
+<!-- 🔥 CONTADOR BIEN ARRIBA -->
+<div id="contadorGlobal">Puntos: 0</div>
+
+<div class="contenedor-juego">
+
+    <h1 style="color:#ffd700;">Mini Juego Final</h1>
+
+    <img src="img/mario2.jpg" class="mario-img" alt="Mario">
+
+    <div id="juego">
+        <div class="pregunta">
+            <h3>1. ¿Qué pieza almacena datos?</h3>
+            <button onclick="incorrecto(this)">RAM</button>
+            <button onclick="correcto(this, 'q1')">Disco</button>
+        </div>
+
+        <div class="pregunta">
+            <h3>2. ¿Qué alimenta el computador?</h3>
+            <button onclick="correcto(this, 'q2')">Fuente de Poder</button>
+            <button onclick="incorrecto(this)">Procesador</button>
+        </div>
+
+        <div class="pregunta">
+            <h3>3. ¿Cuál es el cerebro?</h3>
+            <button onclick="correcto(this, 'q3')">CPU</button>
+            <button onclick="incorrecto(this)">Disco</button>
+        </div>
+    </div>
+
+    <div id="final">
+        <h2>🎉 ¡Juego Terminado!</h2>
+        <p id="resultado-final"></p>
+        <a href="pagina4.html" class="btn">➡ Siguiente Actividad</a>
+        <a href="pagina2.html" class="btn">⬅ Volver</a>
+    </div>
+
+</div>
+
+</body>
+</html>

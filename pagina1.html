@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Ejercicio 1 - Mario Mantenimientos</title>
+
+<style>
+    body { 
+        background: #ff0000; 
+        font-family: Arial, sans-serif; 
+        color: #fff; 
+        padding: 20px; 
+    }
+
+    /* CONTENEDOR CON LAS IMÁGENES Y EL CONTADOR */
+    .mario-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 25px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .mario-icon {
+        width: 80px;
+        height: auto;
+    }
+
+    #contadorGlobal {
+        background: yellow;
+        color: black;
+        width: 180px;
+        padding: 10px;
+        font-weight: bold;
+        text-align:center;
+        border-radius:10px;
+        border:3px solid black;
+        font-size: 20px;
+    }
+
+    h1 { 
+        text-align:center; 
+        font-size:40px; 
+        text-shadow: 3px 3px 0 #000; 
+        margin-top: 10px;
+    }
+
+    .pregunta { 
+        background: #003cff; 
+        margin: 15px 0; 
+        padding: 15px; 
+        border-radius: 10px; 
+        border: 3px solid #ffee00; 
+    }
+
+    .pregunta h3 {
+        margin: 5px;
+        font-size: 20px;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 18px;
+        border-radius: 8px;
+        border: 2px solid black;
+        cursor: pointer;
+        margin: 5px;
+    }
+
+    .correcto { background: #00ff00; }
+    .incorrecto { background: #ff0000; color: white; }
+
+    .botonContinuar {
+        display:block; 
+        margin:20px auto; 
+        padding:12px 25px; 
+        font-size:22px; 
+        background:#ffe600; 
+        border-radius:10px; 
+        border:3px solid #000; 
+        cursor:pointer;
+    }
+</style>
+
+<script>
+// ---------------------------
+// 🔵 SISTEMA DE PUNTOS GLOBAL
+// ---------------------------
+
+function initPuntos() {
+    if (!localStorage.getItem("puntosMario")) {
+        localStorage.setItem("puntosMario", "0");
+    }
+}
+
+function addPointsIfNotScored(flag, pts) {
+    if (!localStorage.getItem(flag)) {
+        let actuales = parseInt(localStorage.getItem("puntosMario") || "0");
+        actuales += pts;
+        localStorage.setItem("puntosMario", actuales);
+        localStorage.setItem(flag, "1");
+        return true;
+    }
+    return false;
+}
+
+function updateCounterDisplay() {
+    const puntos = parseInt(localStorage.getItem("puntosMario") || "0", 10);
+    document.getElementById("contadorGlobal").innerText = "Puntos: " + puntos;
+}
+
+window.onload = function() {
+    initPuntos();
+    updateCounterDisplay();
+};
+
+// ---------------------------
+// 🔵 RESPUESTAS Y RETRO
+// ---------------------------
+
+function responder(pregunta, opcion, correcta) {
+    if (opcion === correcta) {
+
+        // SUMA 5 PUNTOS SOLO UNA VEZ
+        addPointsIfNotScored("p1_" + pregunta, 5);
+        updateCounterDisplay();
+
+        alert("✔ Correcto, bien hecho!");
+
+    } else {
+        alert("✖ Incorrecto");
+    }
+
+    // DESACTIVA LOS BOTONES
+    let botones = document.querySelectorAll(".p" + pregunta);
+    botones.forEach(b => b.disabled = true);
+}
+
+function continuar() {
+    window.location.href = "pagina2.html";
+}
+</script>
+</head>
+<body>
+
+<!-- 🟡 Encabezado con imágenes -->
+<div class="mario-header">
+    <img src="img/mario_izquierda.png" class="mario-icon">
+    <div id="contadorGlobal">Puntos: 0</div>
+    <img src="img/mario_derecha.png" class="mario-icon">
+</div>
+
+<h1>🧰 Ejercicio 1 - Mario Mantenimientos</h1>
+
+
+<!-- Pregunta 1 -->
+<div class="pregunta">
+    <h3>1. ¿Para qué sirve una fuente de poder?</h3>
+    <button class="p1" onclick="responder(1, 'A', 'B')">A) Almacenar información</button>
+    <button class="p1" onclick="responder(1, 'B', 'B')">B) Convertir energía y alimentar componentes</button>
+    <button class="p1" onclick="responder(1, 'C', 'B')">C) Enfriar el procesador</button>
+</div>
+
+<!-- Pregunta 2 -->
+<div class="pregunta">
+    <h3>2. ¿Qué es la placa base?</h3>
+    <button class="p2" onclick="responder(2, 'A', 'B')">A) Guarda datos</button>
+    <button class="p2" onclick="responder(2, 'B', 'B')">B) Conecta y comunica componentes</button>
+    <button class="p2" onclick="responder(2, 'C', 'B')">C) Muestra imágenes en pantalla</button>
+</div>
+
+<!-- Pregunta 3 -->
+<div class="pregunta">
+    <h3>3. ¿Para qué sirve la memoria RAM?</h3>
+    <button class="p3" onclick="responder(3, 'A', 'B')">A) Guardar datos permanentes</button>
+    <button class="p3" onclick="responder(3, 'B', 'B')">B) Ejecutar programas temporalmente</button>
+    <button class="p3" onclick="responder(3, 'C', 'B')">C) Controlar la temperatura</button>
+</div>
+
+<!-- Pregunta 4 -->
+<div class="pregunta">
+    <h3>4. ¿Qué función cumple el procesador?</h3>
+    <button class="p4" onclick="responder(4, 'A', 'A')">A) Ejecutar instrucciones y cálculos</button>
+    <button class="p4" onclick="responder(4, 'B', 'A')">B) Almacenar multimedia</button>
+    <button class="p4" onclick="responder(4, 'C', 'A')">C) Suministrar energía</button>
+</div>
+
+<!-- Pregunta 5 -->
+<div class="pregunta">
+    <h3>5. ¿Qué es un disco duro?</h3>
+    <button class="p5" onclick="responder(5, 'A', 'A')">A) Almacena datos permanentemente</button>
+    <button class="p5" onclick="responder(5, 'B', 'A')">B) Procesa instrucciones</button>
+    <button class="p5" onclick="responder(5, 'C', 'A')">C) Conecta periféricos</button>
+</div>
+
+<button class="botonContinuar" onclick="continuar()">➡ Siguiente Página 2</button>
+<a href="pagina2.html" class="btn btn-sobre-imagen">➡ Continuar</a>
+
+</body>
+</html>
